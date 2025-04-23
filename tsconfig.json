@@ -1,0 +1,19 @@
+{
+  "extends": "@tsconfig/node22",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmitOnError": false,
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "dist"
+  },
+  "exclude": ["node_modules", "dist", "**/*.spec.ts"],
+  "include": ["src/**/*.ts", "src/**/*.json"]
+}
