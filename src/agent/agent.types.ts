@@ -1,4 +1,4 @@
-import { CoreMessage } from "ai";
+import { generateText } from "ai";
 import { TinyProvider } from "../providers";
 
 /**
@@ -20,14 +20,13 @@ export interface TinyAgentOptions<T extends TinyProvider<any, any, any>> {
   maxSteps?: number;
 }
 
+type VercelGenerateTextParams = Omit<
+  Parameters<typeof generateText>[0],
+  "model"
+>;
+
 /** Parameters for generating text using the agent. */
-export interface GenerateTextParams {
-  /** The prompt to generate text from. */
-  prompt?: string;
-  /** The messages to include in the generation. */
-  messages?: CoreMessage[];
-  /** The maximum number of steps to take during generation. This overrides the value supplied to TinyAgent during instantiation */
-  maxSteps?: number;
+export interface GenerateTextParams extends VercelGenerateTextParams {
   /** The model ID to use for generation. */
   modelId?: string;
 }

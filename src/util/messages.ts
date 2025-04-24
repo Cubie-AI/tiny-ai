@@ -1,17 +1,17 @@
-import { CoreMessage } from "ai";
+import { CoreMessage, Message } from "ai";
 import { TinyError } from "./error";
 
 /** Requires at least prompt or messages to be specified. */
 export interface GetMessageParams {
   prompt?: string;
-  messages?: CoreMessage[];
+  messages?: CoreMessage[] | Omit<Message, "id">[];
 }
 
 /** Converts a prompt to a CoreMessage[] or returns the messages if prompt is not specified. */
 export function getMessages({
   prompt,
   messages,
-}: GetMessageParams): CoreMessage[] {
+}: GetMessageParams): CoreMessage[] | Omit<Message, "id">[] {
   if (!prompt && (!messages || messages.length === 0)) {
     throw new TinyError("Prompt or messages are required");
   }

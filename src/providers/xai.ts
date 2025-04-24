@@ -2,7 +2,8 @@ import { createXai, XaiProvider, XaiProviderSettings } from "@ai-sdk/xai";
 import { TinyProvider } from "./base";
 import { TinyProviderOptions } from "./base.types";
 
-type XaiChatModelId =
+/** The support language models by xAI */
+export type XaiChatModelId =
   | "grok-3"
   | "grok-3-latest"
   | "grok-3-fast"
@@ -23,7 +24,9 @@ type XaiChatModelId =
   | "grok-vision-beta"
   | "grok-beta"
   | (string & {});
-type XaiImageModelId = "grok-2-image" | (string & {});
+
+/** The support image models by xAI */
+export type XaiImageModelId = "grok-2-image" | (string & {});
 
 export class TinyXAI extends TinyProvider<
   XaiProvider,
