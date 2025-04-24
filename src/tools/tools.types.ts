@@ -15,5 +15,8 @@ export interface BuildToolParams {
   context?: any;
 }
 
+/**
+ * A utility type that maps an async function to a standard {@link Result} storing the awaited `ReturnType` in the data field.
+ */
 export type ExecuteResult<Method extends (...args: any) => Promise<any>> =
-  Result<ReturnType<Method>>;
+  Result<Awaited<ReturnType<Method>>>;

@@ -1,4 +1,4 @@
-import { tool } from "ai";
+import { Tool, tool } from "ai";
 import z from "zod";
 import { buildResult } from "../util";
 import { BuildToolParams, ExecuteResult } from "./tools.types";
@@ -6,7 +6,7 @@ import { BuildToolParams, ExecuteResult } from "./tools.types";
 /** This function is used to help dynamically build tools for the agent.
  *  Specifically it wraps the handler function and binds the context to it.
  */
-export function buildTool(params: BuildToolParams) {
+export function buildTool(params: BuildToolParams): Tool {
   const { description, parameters = z.object({}), handler, context } = params;
 
   const toolParams = {
@@ -28,7 +28,7 @@ export function executeToolCall<
   Context,
   Method extends (args: Arguments, context?: Context) => Promise<any>
 >(method: Method, context?: Context) {
-  return async (args: Arguments): Promise<ExecuteResult<Method>> => {
+  return async (args: Arguments) => {
     // Initialize a standard result object with default values
     // In any failure the vercel ai sdk requires tools to return results
     let result: ExecuteResult<Method> = buildResult();

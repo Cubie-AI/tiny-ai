@@ -1,6 +1,6 @@
 {
   "name": "@cubie-ai/tiny-ai",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A tiny ai agent framework built by Cubie AI.",
   "license": "ISC",
   "author": "0xSoc <contact@cubie.fun> (https://cubie.fun)",
@@ -13,9 +13,6 @@
     "url": "https://github.com/Cubie-AI/tiny-ai/issues"
   },
   "type": "commonjs",
-  "main": "dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
