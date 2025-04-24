@@ -7,10 +7,10 @@
   "homepage": "https://cubie.fun",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Cubie-AI/cubie-agi"
+    "url": "git+https://github.com/Cubie-AI/tiny-ai"
   },
   "bugs": {
-    "url": "https://github.com/Cubie-AI/cubie-agi/issues"
+    "url": "https://github.com/Cubie-AI/tiny-ai/issues"
   },
   "type": "commonjs",
   "main": "dist/index.js",
