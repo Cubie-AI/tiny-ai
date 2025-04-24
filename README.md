@@ -2,7 +2,7 @@
 
 A small, unopinionated and easily extensible ai framework
 
-![Cubie](/publicMedia.png)
+![Cubie](https://github.com/Cubie-AI/tiny-ai/blob/main/publicMedia.png?raw=true)
 
 ## Table of Contents
 
