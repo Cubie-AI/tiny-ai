@@ -1,15 +1,25 @@
-import { CoreMessage, generateText, ToolSet } from "ai";
+import { generateText, ToolSet } from "ai";
 import { TinyProvider } from "../providers";
 import { buildTool, BuildToolParams } from "../tools";
-import { TinyAgentError } from "../util/error";
+import { getMessages } from "../util";
 import { GenerateTextParams, TinyAgentOptions } from "./agent.types";
 
+/**
+ * Creates an agent that can interact with a language models, image models, and tools.
+ */
 export class TinyAgent {
+  /** A map of tools available to the TinyAgent */
   tools: ToolSet;
+  /** The provider */
   provider: TinyProvider<any, any, any>;
+  /** The system prompt */
   system: string | undefined;
+  /** The maximum number of chained calls the agent should do during tool execution */
   maxSteps: number | undefined;
 
+  /**
+   * Creates an instance of TinyAgent.
+   */
   constructor(options: TinyAgentOptions<TinyProvider<any, any, any>>) {
     this.provider = options.provider;
     this.system = options.system || "";
@@ -17,6 +27,7 @@ export class TinyAgent {
     this.tools = {};
   }
 
+  /** Call the Provider's language model to generate a text response from the supplied prompt or messages.*/
   async generateText(params: GenerateTextParams) {
     const {
       prompt,
@@ -28,7 +39,7 @@ export class TinyAgent {
 
     try {
       const model = this.provider.languageModel(modelId);
-      const messages = this.getMessages({ prompt, messages: userMessages });
+      const messages = getMessages({ prompt, messages: userMessages });
       const data = await generateText({
         model,
         messages,
@@ -50,19 +61,8 @@ export class TinyAgent {
     return result;
   }
 
+  /** Builds a raw tool and registers it with the agents tools */
   registerTool(name: string, toolInfo: BuildToolParams) {
     this.tools[name] = buildTool(toolInfo);
-  }
-
-  getMessages({ prompt, messages }: GenerateTextParams) {
-    let result: CoreMessage[] = [];
-    if (prompt) {
-      result.push({ role: "user", content: prompt });
-    } else if (messages) {
-      result = messages;
-    } else {
-      throw new TinyAgentError("Prompt or messages are required");
-    }
-    return result;
   }
 }

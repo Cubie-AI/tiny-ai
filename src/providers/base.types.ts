@@ -1,2 +1,2 @@
-export type TinyProviderOptions<T> = { name: string } & T;
-export type ProviderOptions<T> = Omit<TinyProviderOptions<T>, "name">;
+export type TinyProviderOptions<T> = T;
+// export type ProviderOptions<T> = Omit<TinyProviderOptions<T>, "name">;

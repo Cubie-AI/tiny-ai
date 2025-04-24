@@ -1,3 +1,6 @@
+/**
+ * TinyError is the base class for all errors in the Tiny library.
+ */
 export class TinyError extends Error {
   constructor(message: string) {
     super(message);
@@ -5,6 +8,9 @@ export class TinyError extends Error {
   }
 }
 
+/**
+ * TinyProviderError is used for errors related to providers.
+ */
 export class TinyProviderError extends TinyError {
   constructor(message: string) {
     super(message);
@@ -12,6 +18,9 @@ export class TinyProviderError extends TinyError {
   }
 }
 
+/**
+ * TinyToolError is used for errors related to tools.
+ */
 export class TinyToolError extends TinyError {
   constructor(message: string) {
     super(message);
@@ -19,6 +28,9 @@ export class TinyToolError extends TinyError {
   }
 }
 
+/**
+ * TinyAgentError is used for errors related to agents.
+ */
 export class TinyAgentError extends TinyError {
   constructor(message: string) {
     super(message);

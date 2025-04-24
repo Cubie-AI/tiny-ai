@@ -5,17 +5,16 @@ import {
 } from "@ai-sdk/openai";
 import { OpenAIChatModelId, OpenAIImageModelId } from "@ai-sdk/openai/internal";
 import { TinyProvider } from "./base";
-import { ProviderOptions } from "./base.types";
+import { TinyProviderOptions } from "./base.types";
 
 export class TinyOpenAI extends TinyProvider<
   OpenAIProvider,
   OpenAIProviderSettings,
   OpenAIChatModelId | OpenAIImageModelId
 > {
-  constructor(options: ProviderOptions<OpenAIProviderSettings>) {
+  constructor(options: TinyProviderOptions<OpenAIProviderSettings>) {
     super({
       ...options,
-      name: "TinyOpenAI",
     });
     this.provider = createOpenAI(this.options);
   }

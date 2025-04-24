@@ -1,37 +1,28 @@
 import { tool } from "ai";
 import z from "zod";
-import { TinyToolError } from "../util/error";
-import { BuildToolParams } from "./tools.types";
+import { buildResult } from "../util";
+import { BuildToolParams, ExecuteResult } from "./tools.types";
 
-async function defaultToolExecute(args: any) {
-  throw new TinyToolError("No execute function provided");
-}
-
+/** This function is used to help dynamically build tools for the agent.
+ *  Specifically it wraps the handler function and binds the context to it.
+ */
 export function buildTool(params: BuildToolParams) {
-  const {
-    description,
-    parameters = z.object({}),
-    handler = defaultToolExecute,
-    context,
-  } = params;
+  const { description, parameters = z.object({}), handler, context } = params;
 
-  return tool({
+  const toolParams = {
     description,
-    parameters,
-    execute: executeToolCall(handler, context),
-  });
+    parameters: parameters,
+  };
+
+  return handler
+    ? tool({ ...toolParams, execute: executeToolCall(handler, context) })
+    : tool(toolParams);
 }
 
-interface ToolCallResult<T> {
-  success: boolean;
-  data: T | undefined;
-  error: string | undefined;
-}
-
-type ExecuteResult<Method extends (...args: any) => Promise<any>> =
-  ToolCallResult<ReturnType<Method>>;
-// This function returns a async function that takes a single parameters object but
-// binds the method and context to the function
+/**
+ * A wrapper function that returns a function that is compatible with the ai-sdk.
+ * This function accepts an optional context which is added as the last argument to the method.
+ */
 export function executeToolCall<
   Arguments,
   Context,
@@ -40,19 +31,18 @@ export function executeToolCall<
   return async (args: Arguments): Promise<ExecuteResult<Method>> => {
     // Initialize a standard result object with default values
     // In any failure the vercel ai sdk requires tools to return results
-    let result: ExecuteResult<Method> = {
-      success: false,
-      data: undefined,
-      error: "Unknown error",
-    };
+    let result: ExecuteResult<Method> = buildResult();
 
     try {
       const data = await method(args, context);
-      result.success = true;
-      result.data = data;
+      result = buildResult({ success: true, data });
     } catch (error) {
-      result.error = error instanceof Error ? error.message : String(error);
+      result = buildResult({
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+      });
     }
+
     return result;
   };
 }
