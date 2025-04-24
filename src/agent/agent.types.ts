@@ -1,7 +1,7 @@
 import { CoreMessage } from "ai";
 import { TinyProvider } from "../providers";
 
-export interface AgentOptions<T extends TinyProvider<any, any, any>> {
+export interface TinyAgentOptions<T extends TinyProvider<any, any, any>> {
   name: string;
   provider: T;
 

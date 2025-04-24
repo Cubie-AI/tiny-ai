@@ -43,6 +43,7 @@
     "prestart": "npm run build",
     "start": "node dist/index.js",
     "dev": "node --import tsx --watch -r ts-node/register src/index.ts",
+    "example": "node --import tsx src/example.ts",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

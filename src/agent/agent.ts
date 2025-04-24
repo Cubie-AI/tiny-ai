@@ -2,15 +2,15 @@ import { CoreMessage, generateText, ToolSet } from "ai";
 import { TinyProvider } from "../providers";
 import { buildTool, BuildToolParams } from "../tools";
 import { TinyAgentError } from "../util/error";
-import { AgentOptions, GenerateTextParams } from "./agent.types";
+import { GenerateTextParams, TinyAgentOptions } from "./agent.types";
 
-export class Agent {
+export class TinyAgent {
   tools: ToolSet;
   provider: TinyProvider<any, any, any>;
   system: string | undefined;
   maxSteps: number | undefined;
 
-  constructor(options: AgentOptions<TinyProvider<any, any, any>>) {
+  constructor(options: TinyAgentOptions<TinyProvider<any, any, any>>) {
     this.provider = options.provider;
     this.system = options.system || "";
     this.maxSteps = options.maxSteps || 3;

@@ -1,13 +1,13 @@
 import z from "zod";
-import { Agent } from "./agent";
+import { TinyAgent } from "./agent";
 import { TinyAnthropic } from "./providers/anthropic";
 
 async function main() {
   const anthropic = new TinyAnthropic({
-    apiKey: "",
+    apiKey: "ANTHROPIC_API_KEY",
   });
 
-  const agent = new Agent({
+  const agent = new TinyAgent({
     name: "TinyAgent",
     system: "A tiny agent",
     provider: anthropic,
@@ -19,7 +19,7 @@ async function main() {
       location: z.string(),
     }),
     handler: async (args) => {
-      console.log(args);
+      console.log(`Agent called getWeather with args: ${JSON.stringify(args)}`);
       return { temperature: 100 };
     },
   });
