@@ -12,14 +12,9 @@ export function getMessages({
   prompt,
   messages,
 }: GetMessageParams): CoreMessage[] {
-  let result: CoreMessage[] = [];
-
-  if (prompt) {
-    result.push({ role: "user", content: prompt });
-  } else if (messages) {
-    result = messages;
-  } else {
+  if (!prompt && (!messages || messages.length === 0)) {
     throw new TinyError("Prompt or messages are required");
   }
-  return result;
+
+  return prompt ? [{ role: "user", content: prompt }] : messages || [];
 }
