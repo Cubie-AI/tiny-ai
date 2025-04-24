@@ -2,9 +2,17 @@
 
 A small, unopinionated and easily extensible ai framework
 
-## Example
+## Installation
 
-Here is some standalone code for creating your `TinyAgent`
+`tiny-ai` can be added to your project through npm.
+
+```
+npm i @cubie-ai/tiny-ai
+```
+
+## Getting started
+
+The below is some starter code for creating a `TinyAgent` using anthropic as the model provider. You will need to populate the `TinyAnthropic` provider with an appropriate API Key.
 
 ```typescript
 import z from "zod";
@@ -12,14 +20,12 @@ import { TinyAgent } from "./agent";
 import { TinyAnthropic } from "./providers/anthropic";
 
 async function main() {
-  const anthropic = new TinyAnthropic({
-    apiKey: "ANTHROPIC_KEY",
-  });
-
   const agent = new TinyAgent({
     name: "TinyAgent",
     system: "A tiny agent",
-    provider: anthropic,
+    provider: new TinyAnthropic({
+      apiKey: "ANTHROPIC_API_KEY",
+    }),
   });
 
   agent.registerTool("getWeather", {
@@ -54,7 +60,15 @@ async function main() {
 main();
 ```
 
-To run the example use the following command:
+## Running the example
+
+Make sure you have installed the required dependencies
+
+```
+npm i
+```
+
+Then you can use the following command to run the `TinyAgent` example
 
 ```
 npm run example

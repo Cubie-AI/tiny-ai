@@ -3,14 +3,12 @@ import { TinyAgent } from "./agent";
 import { TinyAnthropic } from "./providers/anthropic";
 
 async function main() {
-  const anthropic = new TinyAnthropic({
-    apiKey: "ANTHROPIC_API_KEY",
-  });
-
   const agent = new TinyAgent({
     name: "TinyAgent",
     system: "A tiny agent",
-    provider: anthropic,
+    provider: new TinyAnthropic({
+      apiKey: "ANTHROPIC_API_KEY",
+    }),
   });
 
   agent.registerTool("getWeather", {
