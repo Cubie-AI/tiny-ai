@@ -6,6 +6,7 @@ A small, unopinionated and easily extensible ai framework
 
 ## Table of Contents
 
+- [Documentation](#documentation)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
   - [Basic Example](#basic-example)
@@ -13,6 +14,12 @@ A small, unopinionated and easily extensible ai framework
 - [Running The Example](#running-tool-use-example)
   - [Instructions](#instructions)
   - [Output](#output)
+
+## Documentation
+
+Read the docs: [DOCUMENTATION](https://cubie-ai.github.io/tiny-ai/)
+
+Checkout our collection examples: [EXAMPLES](https://github.com/Cubie-AI/tiny-ai-examples)
 
 ## Installation
 
