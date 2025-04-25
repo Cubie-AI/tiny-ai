@@ -18,6 +18,9 @@ export interface TinyAgentOptions<T extends TinyProvider<any, any, any>> {
 
   /** The maximum number of chained calls the agent should do during tool execution */
   maxSteps?: number;
+
+  /** The tools available to the agent. */
+  tools?: Record<string, any>;
 }
 
 type VercelGenerateTextParams = Omit<
@@ -26,7 +29,7 @@ type VercelGenerateTextParams = Omit<
 >;
 
 /** Parameters for generating text using the agent. */
-export interface GenerateTextParams extends VercelGenerateTextParams {
+export type GenerateTextParams = VercelGenerateTextParams & {
   /** The model ID to use for generation. */
   modelId?: string;
-}
+};

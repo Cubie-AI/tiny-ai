@@ -1,7 +1,7 @@
 import { generateText, ToolSet } from "ai";
 import { TinyProvider } from "../providers";
 import { buildTool, BuildToolParams } from "../tools";
-import { getMessages } from "../util";
+import { err, getMessages, ok, TinyAgentError } from "../util";
 import { GenerateTextParams, TinyAgentOptions } from "./agent.types";
 
 /**
@@ -24,45 +24,54 @@ export class TinyAgent {
     this.provider = options.provider;
     this.system = options.system || "";
     this.maxSteps = options.maxSteps || 3;
-    this.tools = {};
+    this.tools = options.tools || {};
   }
 
   /** Call the Provider's language model to generate a text response from the supplied prompt or messages.*/
   async generateText(params: GenerateTextParams) {
-    const {
-      prompt,
-      messages: userMessages,
-      maxSteps = this.maxSteps,
-      modelId,
-    } = params;
-    let result;
+    // Destructure the parameters that are used within the function
+    const { modelId, prompt, messages, ...rest } = params;
 
+    // Some settings may be set during the agent creation
+    // however, the user may override them by passing them in the params
+    const settings = {
+      system: this.system,
+      tools: this.tools,
+      maxSteps: this.maxSteps,
+    };
+
+    let result;
     try {
-      const model = this.provider.languageModel(modelId);
-      const messages = getMessages({ prompt, messages: userMessages });
+      // Merge the instance settings with the user provided settings, overriding any instance settings
+      const config = { ...settings, ...rest };
+
       const data = await generateText({
-        model,
-        messages,
-        tools: this.tools,
-        system: this.system,
-        maxSteps,
+        model: this.provider.languageModel(modelId),
+        ...config,
+        messages: getMessages({ prompt, messages }),
       });
-      result = {
-        success: true,
-        data: data,
-      };
+
+      if (!data) {
+        throw new TinyAgentError("No data returned from the language model");
+      }
+
+      result = ok(data);
     } catch (error) {
-      result = {
-        success: false,
-        error: error instanceof Error ? error.message : String(error),
-      };
+      result = err(error);
     }
 
     return result;
   }
 
-  /** Builds a raw tool and registers it with the agents tools */
+  /** Builds a tool and adds it to the agents tools. Replace's any existing tool with the same name */
   registerTool(name: string, toolInfo: BuildToolParams) {
     this.tools[name] = buildTool(toolInfo);
+  }
+
+  /** Removes a tool from the agent */
+  unregisterTool(name: string) {
+    if (this.tools[name]) {
+      delete this.tools[name];
+    }
   }
 }

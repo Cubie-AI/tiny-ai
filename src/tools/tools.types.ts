@@ -10,7 +10,7 @@ export interface BuildToolParams {
   /** Optional paramters that are passed into the tools handler during invokation. Note: Client side tools don't specify handlers */
   parameters?: Tool["parameters"];
   /** The function that will be called when the tool is executed */
-  handler?: (args: any) => Promise<any>;
+  handler?: (...args: any) => any;
   /** Optional context that will be passed to the handler */
   context?: any;
 }
@@ -18,5 +18,5 @@ export interface BuildToolParams {
 /**
  * A utility type that maps an async function to a standard {@link Result} storing the awaited `ReturnType` in the data field.
  */
-export type ExecuteResult<Method extends (...args: any) => Promise<any>> =
+export type ExecuteResult<Method extends (...args: any) => PromiseLike<any>> =
   Result<Awaited<ReturnType<Method>>>;

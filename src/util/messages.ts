@@ -1,17 +1,22 @@
 import { CoreMessage, Message } from "ai";
 import { TinyError } from "./error";
 
+/**
+ * A standardized message object for the TinyAgent and tools.
+ */
+type TinyMessage = CoreMessage[] | Omit<Message, "id">[];
+
 /** Requires at least prompt or messages to be specified. */
 export interface GetMessageParams {
   prompt?: string;
-  messages?: CoreMessage[] | Omit<Message, "id">[];
+  messages?: TinyMessage;
 }
 
 /** Converts a prompt to a CoreMessage[] or returns the messages if prompt is not specified. */
 export function getMessages({
   prompt,
   messages,
-}: GetMessageParams): CoreMessage[] | Omit<Message, "id">[] {
+}: GetMessageParams): TinyMessage {
   if (!prompt && (!messages || messages.length === 0)) {
     throw new TinyError("Prompt or messages are required");
   }
