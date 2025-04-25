@@ -32,19 +32,16 @@ export class TinyAgent {
     // Destructure the parameters that are used within the function
     const { modelId, prompt, messages, ...rest } = params;
 
-    // Some settings may be set during the agent creation
-    // however, the user may override them by passing them in the params
-    const settings = {
+    // merge the parameters with the class properties overriding any duplicates
+    const config = {
       system: this.system,
       tools: this.tools,
       maxSteps: this.maxSteps,
+      ...rest,
     };
 
     let result;
     try {
-      // Merge the instance settings with the user provided settings, overriding any instance settings
-      const config = { ...settings, ...rest };
-
       const data = await generateText({
         model: this.provider.languageModel(modelId),
         ...config,
