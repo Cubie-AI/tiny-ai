@@ -59,7 +59,7 @@ export type VercelGenerateTextParams = Omit<
 
 /** Parameters for generating text using the agent. */
 export type GenerateTextParams = VercelGenerateTextParams & {
-  tools: TinyTool[];
+  tools?: TinyTool[];
 
   /** The model ID to use for generation. */
   modelId?: string;
