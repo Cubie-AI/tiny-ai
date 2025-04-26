@@ -4,7 +4,7 @@ import { Result } from "../utils";
 /**
  * Parameters used to build a tool.
  */
-export interface TinyToolParams<T extends Record<string, any> = {}> {
+export interface TinyToolConfig<T extends Record<string, any> = {}> {
   /** The description of the tool */
   description: string;
   /** Optional parameters that are passed into the tools handler during invocation. Note: Client side tools don't specify handlers */
