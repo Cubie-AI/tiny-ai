@@ -12,6 +12,10 @@ import {
 } from "./agent.types";
 
 /**
+ * @documents ../../guides/agents.md
+ */
+
+/**
  * Creates an agent that can interact with a language models, image models, and tools.
  */
 export class TinyAgent {
