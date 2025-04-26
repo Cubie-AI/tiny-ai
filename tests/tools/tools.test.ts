@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { TinyTool } from "../../src/tools/tools";
-import { BuildToolParams } from "../../src/tools/tools.types";
+import { TinyToolParams } from "../../src/tools/tools.types";
 
 describe("TinyTool", () => {
-  const mockConfig: BuildToolParams = {
+  const mockConfig: TinyToolParams = {
     description: "testTool",
     parameters: z.object({
       param: z.string(),
@@ -16,7 +16,7 @@ describe("TinyTool", () => {
     tinyTool = new TinyTool("toolName", mockConfig);
   });
 
-  it("should initialize correctly with valid BuildToolParams", () => {
+  it("should initialize correctly with valid TinyToolParams", () => {
     expect(tinyTool.config).toBe(mockConfig);
   });
 

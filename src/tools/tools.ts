@@ -1,4 +1,4 @@
-import { BuildToolParams } from "./tools.types";
+import { TinyToolParams } from "./tools.types";
 import { buildTool } from "./util";
 
 /**
@@ -12,7 +12,7 @@ export class TinyTool {
     /** The name of the tool */
     public name: string,
     /** The tool configuration parameters */
-    public config: BuildToolParams
+    public config: TinyToolParams
   ) {}
 
   build() {

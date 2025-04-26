@@ -4,15 +4,15 @@ import { Result } from "../utils";
 /**
  * Parameters used to build a tool.
  */
-export interface BuildToolParams {
+export interface TinyToolParams<T extends Record<string, any> = {}> {
   /** The description of the tool */
   description: string;
-  /** Optional paramters that are passed into the tools handler during invokation. Note: Client side tools don't specify handlers */
+  /** Optional parameters that are passed into the tools handler during invocation. Note: Client side tools don't specify handlers */
   parameters?: Tool["parameters"];
   /** The function that will be called when the tool is executed */
   handler?: (...args: any) => any;
   /** Optional context that will be passed to the handler */
-  context?: any;
+  context?: T;
 }
 
 /**

@@ -3,7 +3,7 @@ import z from "zod";
 import { err, ok } from "../utils";
 import { toMap } from "../utils/transform";
 import { TinyTool } from "./tools";
-import { BuildToolParams, ExecuteResult } from "./tools.types";
+import { ExecuteResult, TinyToolParams } from "./tools.types";
 
 /**
  * Utility function to for converting a map or array of {@link TinyTool} into a map
@@ -21,7 +21,7 @@ export function buildTools(tools: TinyTool[] | Record<string, TinyTool>) {
  *  by wrapping the handler function in a {@link executeToolCall} to allow for
  *  error handling, result formatting, and optional context passing.
  */
-export function buildTool(params: BuildToolParams): Tool {
+export function buildTool(params: TinyToolParams): Tool {
   const { description, parameters = z.object({}), handler, context } = params;
 
   const toolParams = {
