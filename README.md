@@ -11,7 +11,8 @@ A small, unopinionated and easily extensible ai framework
 - [Getting Started](#getting-started)
   - [Creating a TinyAgent](#creating-a-tinyagent)
   - [Basic Example](#basic-example)
-  - [Tool Use Example](#tool-use-agent)
+  - [Tools](#tools)
+  - [Social Agent (WIP)](#building-a-social-agent-wip)
 - [Examples](https://github.com/Cubie-AI/tiny-ai-examples)
   - [Simple Agent](https://github.com/Cubie-AI/tiny-ai-examples#simple-agent)
   - [Conversational Agent](https://github.com/Cubie-AI/tiny-ai-examples#simple-agent-convo)
@@ -162,4 +163,110 @@ export const agent = new TinyAgent({
   }),
   clients: [solanaMcpClient],
 });
+```
+
+## Building a social agent (WIP)
+
+This is just an example and none of the twitter functionality is actually complete here.
+I will create a seprate registry tools.
+
+```typescript
+import { TinyAgent, TinyAnthropic, TinyTool } from "@cubie-ai/tiny-ai";
+import { input } from "@inquirer/prompts";
+import "dotenv/config";
+import z from "zod";
+
+// Prep the tiny agent
+const anthropic = new TinyAnthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
+
+const agent = new TinyAgent({
+  provider: anthropic,
+});
+
+// create a loading function that gets all information relevant for to the agent
+function mockLoadContext() {
+  return {
+    Name: "Cubie",
+    Age: 5,
+    Location: "Solana",
+    Interests: ["AI", "Blockchain", "Web3"],
+    FavoriteColor: "Blue",
+    FavoriteFood: "Pizza",
+    mentions: [
+      { from: "user1", text: "Hello, how are you?" },
+      { from: "user2", text: "What is your favorite color?" },
+      { from: "user3", text: "Do you like pizza?" },
+    ],
+    recentTweets: [
+      { text: "Just had a great pizza!", date: "2023-10-01" },
+      { text: "Loving the new AI features!", date: "2023-10-02" },
+      { text: "Blockchain is the future!", date: "2023-10-03" },
+    ],
+  };
+}
+
+// create a tool that posts tweets. Here you would use the twitter-sdk
+const tweet = new TinyTool("tweet", {
+  description: "Post a tweet to Twitter.",
+  parameters: z.object({}),
+  handler: async () => {
+    // load some context from the agent from a database or elsewhere
+    const context = mockLoadContext();
+
+    const generateTweet = agent.generateText({
+      prompt: `
+      # Biography
+      Name: ${context.Name}
+      Age: ${context.Age}
+      Location: ${context.Location}
+      Interests: 
+      ${context.Interests.map((interest) => `- ${interest}`).join("\n")}
+
+      # Recent Mentions
+      ${context.mentions
+        .map((mention) => `@${mention.from}: ${mention.text}`)
+        .join("\n")}
+
+      # Recent Tweets
+      ${context.recentTweets
+        .map((tweet) => `${tweet.date}: ${tweet.text}`)
+        .join("\n")}
+          
+      # Task
+      Your task is to generate compelling tweets based on all the information above`,
+
+      maxSteps: 5,
+      temperature: 0.7,
+    });
+  },
+});
+
+// Add the tool to the agent
+agent.putTool(tweet);
+
+async function main() {
+  // Here if you ask the agent to write a tweet it will call the tweet tool
+  const userMessage = await input({
+    message: "You: ",
+    validate: (input) => {
+      return input.trim() !== "" ? true : "Please enter a message.";
+    },
+  });
+
+  const response = await agent.generateText({
+    prompt: userMessage,
+  });
+
+  // Check if the response is valid
+  if (!response || !response.success) {
+    console.error("Error:", response.error);
+    return;
+  }
+
+  console.log(`Agent: ${response.data?.text}`);
+}
+
+main();
 ```
