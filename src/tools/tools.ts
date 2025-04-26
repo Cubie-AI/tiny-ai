@@ -9,6 +9,8 @@ import { buildTool } from "./util";
  */
 export class TinyTool {
   constructor(
+    /** The name of the tool */
+    public name: string,
     /** The tool configuration parameters */
     public config: BuildToolParams
   ) {}

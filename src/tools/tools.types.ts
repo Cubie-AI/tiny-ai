@@ -1,5 +1,5 @@
 import { Tool } from "ai";
-import { Result } from "../util";
+import { Result } from "../utils";
 
 /**
  * Parameters used to build a tool.

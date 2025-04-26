@@ -1,6 +1,6 @@
 import { ImageModelV1, ProviderV1 } from "@ai-sdk/provider";
 import { LanguageModelV1 } from "ai";
-import { getModelId, TinyProviderError } from "../util";
+import { getModelId, TinyProviderError } from "../utils";
 import { TinyProviderOptions } from "./base.types";
 
 /**

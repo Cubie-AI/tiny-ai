@@ -13,7 +13,7 @@ describe("TinyTool", () => {
 
   let tinyTool: TinyTool;
   beforeEach(() => {
-    tinyTool = new TinyTool(mockConfig);
+    tinyTool = new TinyTool("toolName", mockConfig);
   });
 
   it("should initialize correctly with valid BuildToolParams", () => {
@@ -21,7 +21,7 @@ describe("TinyTool", () => {
   });
 
   it("should call return the correct result when build is invoked", () => {
-    const tool = new TinyTool({
+    const tool = new TinyTool("toolName", {
       description: "testTool",
       parameters: z.object({
         param: z.string(),

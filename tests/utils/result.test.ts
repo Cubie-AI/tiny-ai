@@ -1,4 +1,4 @@
-import { buildResult, DEFAULT_RESULT, err, ok } from "../../src/util/result";
+import { buildResult, DEFAULT_RESULT, err, ok } from "../../src/utils/result";
 
 describe("buildResult", () => {
   it("should return the DEFAULT_RESULT when no parameters are provided", () => {

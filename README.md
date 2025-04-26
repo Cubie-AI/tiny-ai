@@ -9,6 +9,7 @@ A small, unopinionated and easily extensible ai framework
 - [Documentation](#documentation)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
+  - [Creating a TinyAgent](#creating-a-tinyagent)
   - [Basic Example](#basic-example)
   - [Tool Use Example](#tool-use-agent)
 - [Running The Example](#running-tool-use-example)
@@ -31,12 +32,16 @@ npm i @cubie-ai/tiny-ai
 
 ## Getting Started
 
+### Creating a TinyAgent
+
+Creating a `TinyAgent` is super simple and only requires a single `TinyProvider` to be supplied.
+
+```typescript
+const provider = new TinyAnthropic({ apikey: "your-api-key" });
+const agent = new TinyAgent({ provider });
+```
+
 ### Basic Example
-
-To get started using tiny-ai you only need to create 2 objects:
-
-1. The Provider (ie TinyAnthropic, TinyOpenAI)
-2. The Agent
 
 The following code is like the `hello, world!` of he `tiny-ai` framework.
 
@@ -46,11 +51,13 @@ import { TinyAnthropic } from "./providers/anthropic";
 
 async function main() {
   const agent = new TinyAgent({
-    name: "TinyAgent",
-    system: "A tiny agent",
+    name: "Cubie",
     provider: new TinyAnthropic({
-      apiKey: "ANTHROPIC_API_KEY",
+      apiKey: "your-api-key",
     }),
+    settings: {
+      system: "You are a helpful and charming assistant",
+    },
   });
 
   const response = await agent.generateText({
@@ -64,36 +71,40 @@ async function main() {
 main();
 ```
 
-### Tool Use Agent
+### Tool Use Example
 
 You are able to `'register'` tools for the agent to use. A more comprehensive example of creating an agent is as follows:
 
 ```typescript
 import z from "zod";
 import { TinyAgent } from "./agent";
-import { TinyAnthropic } from "./providers/anthropic";
+import { TinyAnthropic } from "./providers";
+import {TinyTool} from "./tools"
 
 async function main() {
   const agent = new TinyAgent({
-    name: "TinyAgent",
-    system: "A tiny agent",
     provider: new TinyAnthropic({
-      apiKey: "ANTHROPIC_API_KEY",
+      apiKey: "your-api-key",
     }),
-  });
-
-  agent.registerTool("getWeather", {
-    description: "Get the average weather in a country",
-    parameters: z.object({
-      location: z.string(),
-    }),
-    handler: async (args) => {
-      console.log(`Agent called getWeather with args: ${JSON.stringify(args)}`);
-      return { temperature: 100 };
+    settings: {
+      tools: {
+        getWeather: {
+          description: "Get the average weather in a country",
+          parameters: z.object({
+            location: z.string(),
+          }),
+          handler: async (args) => {
+            console.log(
+              `Agent called getWeather with args: ${JSON.stringify(args)}`
+            );
+            return { temperature: 100 };
+          },
+        },
+      },
     },
   });
 
-  agent.registerTool("getPopulation", {
+  const populationTool = new TinyTool('getPopulation',  {
     description: "Get the population of any location",
     parameters: z.object({
       location: z.string(),
@@ -101,8 +112,7 @@ async function main() {
     handler: async (args) => {
       // call some external system
       return { population: 1000000 };
-    },
-  });
+    })
 
   const response = await agent.generateText({
     prompt: "What is the weather in los angeles and population of china?",

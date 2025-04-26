@@ -3,9 +3,6 @@ import { TinyProvider } from "../providers";
 import { TinyTool } from "../tools";
 
 export interface AgentSettings {
-  /** The tools available to the agent. */
-  tools?: Record<string, TinyTool>;
-
   /** The system prompt for the agent. */
   system?: string;
 
@@ -34,11 +31,14 @@ export interface AgentSettings {
  * @template T - A generic type that extends TinyProvider.
  */
 export interface TinyAgentOptions<T extends TinyProvider<any, any, any>> {
-  /** The name of the agent. */
-  name: string;
-
   /** The provider instance for the agent. */
   provider: T;
+
+  /** The tools available to the agent. */
+  tools?: TinyTool[] | Record<string, TinyTool>;
+
+  /** An optional name for the agent instance. Defaults to TinyAgent */
+  name?: string;
 
   /** The settings for the agent.
    * These will override the default settings returned by {@link TinyAgent.defaultSettings}.
@@ -59,7 +59,7 @@ export type VercelGenerateTextParams = Omit<
 
 /** Parameters for generating text using the agent. */
 export type GenerateTextParams = VercelGenerateTextParams & {
-  tools: Record<string, TinyTool>;
+  tools: TinyTool[];
 
   /** The model ID to use for generation. */
   modelId?: string;

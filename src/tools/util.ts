@@ -1,15 +1,22 @@
 import { Tool, tool } from "ai";
 import z from "zod";
-import { err, ok } from "../util";
+import { err, ok } from "../utils";
+import { toMap } from "../utils/transform";
 import { TinyTool } from "./tools";
 import { BuildToolParams, ExecuteResult } from "./tools.types";
 
-export function buildToolSet(tools: Record<string, TinyTool>) {
-  return Object.entries(tools).reduce((acc, [name, tool]) => {
-    acc[name] = tool.build();
-    return acc;
-  }, {} as Record<string, Tool>);
+/**
+ * Utility function to for converting a map or array of {@link TinyTool} into a map
+ * of {@link Tool} objects.
+ */
+export function buildTools(tools: TinyTool[] | Record<string, TinyTool>) {
+  return toMap(
+    tools,
+    (tool) => tool.name,
+    (tool) => tool.build()
+  );
 }
+
 /** This function is used to help dynamically build tools for an agent,
  *  by wrapping the handler function in a {@link executeToolCall} to allow for
  *  error handling, result formatting, and optional context passing.

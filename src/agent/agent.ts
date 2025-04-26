@@ -1,8 +1,9 @@
 import { generateText } from "ai";
 import { TinyProvider } from "../providers";
 import { TinyTool } from "../tools";
-import { buildToolSet } from "../tools/util";
-import { err, getMessages, ok, TinyAgentError } from "../util";
+import { buildTools } from "../tools/util";
+import { err, getMessages, ok, TinyAgentError } from "../utils";
+import { toMap } from "../utils/transform";
 import {
   AgentSettings,
   GenerateTextParams,
@@ -19,6 +20,9 @@ export class TinyAgent {
   /** The provider */
   provider: TinyProvider<any, any, any>;
 
+  /** The tools available to the agent. */
+  tools: Record<string, TinyTool>;
+
   /** The system prompt for the agent.
    * Uses the default settings returned by {@link defaultSettings} if not provided.
    */
@@ -28,10 +32,16 @@ export class TinyAgent {
    * Creates an instance of TinyAgent.
    */
   constructor(options: TinyAgentOptions<TinyProvider<any, any, any>>) {
-    const { name, provider, settings = undefined } = options;
+    const {
+      name = "TinyAgent",
+      provider,
+      tools = [],
+      settings = undefined,
+    } = options;
 
     this.name = name;
     this.provider = provider;
+    this.tools = toMap(tools, (tool) => tool.name);
 
     // If agent settings are provided we override the default settings entirely
     if (settings) {
@@ -46,22 +56,20 @@ export class TinyAgent {
       modelId,
       prompt,
       messages,
-      tools: paramTools = {},
+      tools: paramTools = [],
       ...options
     } = params;
 
-    const { tools: classTools = {}, ...classSettings } = this.settings;
-
     // Merge the existing class tools with the parameters
     // and build the tool set.
-    const tools = buildToolSet({
-      ...classTools,
-      ...paramTools,
+    const tools = buildTools({
+      ...this.tools,
+      ...toMap(paramTools),
     });
 
     // merge the parameters with the class properties overriding any duplicates
     const config = {
-      ...classSettings,
+      ...this.settings,
       ...options,
       model: this.provider.languageModel(modelId),
       tools,
@@ -85,26 +93,27 @@ export class TinyAgent {
   }
 
   /** Adds or replaces a tool in the agent's tools. */
-  registerTool(name: string, tool: TinyTool) {
-    if (!this.settings) {
-      this.settings = this.defaultSettings();
+  putTool(tool: TinyTool) {
+    if (!tool) {
+      this.tools = {};
     }
-    if (!this.settings.tools) {
-      this.settings.tools = {};
-    }
-    this.settings.tools[name] = tool;
+    this.tools[tool.name] = tool;
   }
 
   /** Removes a tool from the agent */
-  unregisterTool(name: string) {
-    if (this.settings && this.settings.tools && this.settings.tools[name]) {
-      delete this.settings.tools[name];
+  deleteTool(name: string) {
+    if (name in this.tools) {
+      delete this.tools[name];
     }
+  }
+
+  /** Returns a tool by name */
+  getTool(name: string) {
+    return this.tools[name] || undefined;
   }
 
   defaultSettings(): Required<AgentSettings> {
     return {
-      tools: {},
       system: "You are a helpful assistant.",
       maxSteps: 3,
       maxTokens: 1024,
