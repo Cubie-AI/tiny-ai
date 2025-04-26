@@ -68,7 +68,6 @@ describe("TinyAgent tools", () => {
       tools: [tool],
       settings: {},
     });
-    console.log(agent.tools);
     const retrievedTool = agent.getTool(tool.name);
     expect(retrievedTool).toBeDefined();
     expect(retrievedTool).toEqual(tool);
