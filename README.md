@@ -183,6 +183,9 @@ const anthropic = new TinyAnthropic({
 
 const agent = new TinyAgent({
   provider: anthropic,
+  settings: {
+    maxSteps: 5 //required for the agent to chain tool calls and inference
+  }
 });
 
 // create a loading function that gets all information relevant for to the agent
@@ -220,8 +223,6 @@ const tweet = new TinyTool("tweet", {
     context: z.string();
   }),
   handler: async ({context}) => {
-    // load some context from the agent from a database or elsewhere
-    const context = mockLoadContext();
     const generateTweet = agent.generateText({
       prompt: `${context}
       # Task
