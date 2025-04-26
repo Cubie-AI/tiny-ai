@@ -207,36 +207,25 @@ function mockLoadContext() {
   };
 }
 
+const loadContext = new TinyTool("loadContext", {
+  description:
+    "Load the context before writing a tweet. Must be called before calling 'tweet'. Return the context as a string.",
+  handler: () => ({ context: formatContext(mockLoadContext()) }),
+});
+
 // create a tool that posts tweets. Here you would use the twitter-sdk
 const tweet = new TinyTool("tweet", {
-  description: "Post a tweet to Twitter.",
-  parameters: z.object({}),
-  handler: async () => {
+  description: "Post a tweet to Twitter. ",
+  parameters: z.object({
+    context: z.string();
+  }),
+  handler: async ({context}) => {
     // load some context from the agent from a database or elsewhere
     const context = mockLoadContext();
-
     const generateTweet = agent.generateText({
-      prompt: `
-      # Biography
-      Name: ${context.Name}
-      Age: ${context.Age}
-      Location: ${context.Location}
-      Interests: 
-      ${context.Interests.map((interest) => `- ${interest}`).join("\n")}
-
-      # Recent Mentions
-      ${context.mentions
-        .map((mention) => `@${mention.from}: ${mention.text}`)
-        .join("\n")}
-
-      # Recent Tweets
-      ${context.recentTweets
-        .map((tweet) => `${tweet.date}: ${tweet.text}`)
-        .join("\n")}
-          
+      prompt: `${context}
       # Task
       Your task is to generate compelling tweets based on all the information above`,
-
       maxSteps: 5,
       temperature: 0.7,
     });
