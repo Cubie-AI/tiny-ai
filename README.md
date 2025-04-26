@@ -15,7 +15,7 @@ A small, unopinionated and easily extensible ai framework
   - [Social Agent (WIP)](#building-a-social-agent-wip)
 - [Examples](https://github.com/Cubie-AI/tiny-ai-examples)
   - [Simple Agent](https://github.com/Cubie-AI/tiny-ai-examples#simple-agent)
-  - [Conversational Agent](https://github.com/Cubie-AI/tiny-ai-examples#simple-agent-convo)
+  - [Conversational Agent](https://github.com/Cubie-AI/tiny-ai-examples#conversational-agent)
   - [ExpressJs Agent](https://github.com/Cubie-AI/tiny-ai-examples#express-agent)
   - [Tool Use Agent](https://github.com/Cubie-AI/tiny-ai-examples#agent-tool-use)
   - [MCP Tool Use Agent](https://github.com/Cubie-AI/tiny-ai-examples#mcp-tool-use-agent)
