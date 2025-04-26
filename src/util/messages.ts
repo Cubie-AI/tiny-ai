@@ -2,9 +2,9 @@ import { CoreMessage, Message } from "ai";
 import { TinyError } from "./error";
 
 /**
- * A standardized message object for the TinyAgent and tools.
+ * A generic message type that can be used to represent user and assistant messages.
  */
-type TinyMessage = CoreMessage[] | Omit<Message, "id">[];
+export type TinyMessage = CoreMessage[] | Omit<Message, "id">[];
 
 /** Requires at least prompt or messages to be specified. */
 export interface GetMessageParams {

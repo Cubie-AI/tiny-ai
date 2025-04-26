@@ -39,5 +39,13 @@ export class TinyAgentError extends TinyError {
 }
 
 export function getErrorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : "Unknown error occurred";
+  let message: string;
+  if (error instanceof Error) {
+    message = error.message;
+  } else if (typeof error === "string") {
+    message = error;
+  } else {
+    message = "Unknown error occurred";
+  }
+  return message;
 }

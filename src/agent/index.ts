@@ -1,2 +1,3 @@
 export * from "./agent";
-export * from "./agent.types";
+export * as 'types' from "./agent.types";
+
