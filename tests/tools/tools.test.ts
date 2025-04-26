@@ -1,3 +1,4 @@
+import { jsonSchema } from "ai";
 import { z } from "zod";
 import { TinyTool } from "../../src/tools/tools";
 import { TinyToolConfig } from "../../src/tools/tools.types";
@@ -31,6 +32,32 @@ describe("TinyTool", () => {
         param,
       }),
     });
+    const result = tool.build();
+    expect(result).toBeDefined();
+    expect(result.description).toBeDefined();
+    expect(result.parameters).toBeDefined();
+  });
+
+  it("should build a tool when parameters are a json schema", () => {
+    const tool = new TinyTool("toolName", {
+      description: "testTool",
+      parameters: jsonSchema({
+        type: "object",
+        properties: {
+          testKey: {
+            type: "string",
+          },
+        },
+        required: ["testKey"],
+        additionalProperties: false,
+        $schema: "http://json-schema.org/draft-07/schema#",
+      }),
+      handler: ({ testKey }) => ({
+        success: true,
+        testKey,
+      }),
+    });
+
     const result = tool.build();
     expect(result).toBeDefined();
     expect(result.description).toBeDefined();

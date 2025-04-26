@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { TinyAnthropic, TinyTool } from "../../src";
 import { TinyAgent } from "../../src/agent/agent";
 
@@ -7,9 +8,9 @@ const provider = new TinyAnthropic({
 
 const tool = new TinyTool("testTool", {
   description: "testTool",
-  parameters: {
-    param: "string",
-  },
+  parameters: z.object({
+    param: z.string(),
+  }),
 });
 
 describe("TinyAgent", () => {
@@ -62,36 +63,45 @@ describe("TinyAgent settings", () => {
 });
 
 describe("TinyAgent tools", () => {
-  it("should get a tool by name", () => {
+  it("should get a tool by name", async () => {
     const agent = new TinyAgent({
       provider,
       tools: [tool],
       settings: {},
     });
-    const retrievedTool = agent.getTool(tool.name);
+    const retrievedTool = await agent.findTool(tool.name);
     expect(retrievedTool).toBeDefined();
-    expect(retrievedTool).toEqual(tool);
   });
 
-  it("should register a tool", () => {
+  it("should register a tool", async () => {
     const agent = new TinyAgent({
       name: "testAgent",
       provider,
     });
     agent.putTool(tool);
-    expect(agent.tools).toBeDefined();
-    expect(agent.tools).toHaveProperty("testTool");
-    expect(agent.getTool(tool.name)).toEqual(tool);
+    const retrievedTool = await agent.findTool(tool.name);
+
+    expect(retrievedTool).toBeDefined();
   });
 
-  it("should unregister a tool", () => {
+  it("should register a tool", async () => {
+    const agent = new TinyAgent({
+      name: "testAgent",
+      provider,
+    });
+    agent.putTool(tool);
+    const retrievedTool = await agent.findTool(tool.name);
+    expect(retrievedTool).toBeDefined();
+  });
+
+  it("should unregister a tool", async () => {
     const agent = new TinyAgent({
       name: "testAgent",
       provider,
       tools: [tool],
     });
     agent.deleteTool(tool.name);
-    expect(agent.tools).not.toContain(tool);
-    expect(agent.getTool(tool.name)).toBeUndefined();
+    const retrievedTool = await agent.findTool(tool.name);
+    expect(retrievedTool).toBeUndefined();
   });
 });

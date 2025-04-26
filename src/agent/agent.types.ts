@@ -1,4 +1,5 @@
 import { generateText } from "ai";
+import { TinyMCP } from "../mcp/mcp";
 import { TinyProvider } from "../providers";
 import { TinyTool } from "../tools";
 
@@ -36,6 +37,11 @@ export interface TinyAgentOptions<T extends TinyProvider<any, any, any>> {
 
   /** The tools available to the agent. */
   tools?: TinyTool[] | Record<string, TinyTool>;
+
+  /**
+   * A list of TinyMCP clients available to the agent.
+   */
+  clients?: TinyMCP[];
 
   /** An optional name for the agent instance. Defaults to TinyAgent */
   name?: string;

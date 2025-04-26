@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { buildTool } from "../../src/tools/util";
 
 describe("buildTool", () => {
@@ -5,9 +6,9 @@ describe("buildTool", () => {
     // Mock implementation of buildTool
     const mockConfig = {
       description: "testTool",
-      parameters: {
-        param: "test",
-      },
+      parameters: z.object({
+        param: z.string(),
+      }),
       handler: jest.fn(),
       context: {},
     };

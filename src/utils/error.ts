@@ -38,6 +38,13 @@ export class TinyAgentError extends TinyError {
   }
 }
 
+export class TinyMCPError extends TinyError {
+  constructor(message: string) {
+    super(message);
+    this.name = "TinyMCPError";
+  }
+}
+
 export function getErrorMessage(error: unknown): string {
   let message: string;
   if (error instanceof Error) {

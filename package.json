@@ -43,7 +43,9 @@
     "test:tools": "jest --testPathPattern=tests/tools",
     "test:providers": "jest --testPathPattern=tests/providers",
     "test:utils": "jest --testPathPattern=tests/utils",
-    "test:agents": "jest --testPathPattern=tests/agents"
+    "test:agents": "jest --testPathPattern=tests/agents",
+    "test:mcp": "jest --testPathPattern=tests/mcp",
+    "mock:mcp": "node --import tsx tests/mcp/mockMcpServer.ts"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.1",
@@ -61,6 +63,7 @@
     "@ai-sdk/openai": "^1.3.17",
     "@ai-sdk/provider": "^1.1.3",
     "@ai-sdk/xai": "^1.2.15",
+    "@modelcontextprotocol/sdk": "^1.10.2",
     "ai": "^4.3.9",
     "zod": "3.24.3"
   }

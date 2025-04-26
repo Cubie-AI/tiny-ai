@@ -1,4 +1,5 @@
-import { Tool } from "ai";
+import { Schema } from "ai";
+import z from "zod";
 import { Result } from "../utils";
 
 /**
@@ -8,7 +9,7 @@ export interface TinyToolConfig<T extends Record<string, any> = {}> {
   /** The description of the tool */
   description: string;
   /** Optional parameters that are passed into the tools handler during invocation. Note: Client side tools don't specify handlers */
-  parameters?: Tool["parameters"];
+  parameters?: z.ZodTypeAny | Schema;
   /** The function that will be called when the tool is executed */
   handler?: (...args: any) => any;
   /** Optional context that will be passed to the handler */

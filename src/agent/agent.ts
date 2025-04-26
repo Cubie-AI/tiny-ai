@@ -1,4 +1,5 @@
 import { generateText } from "ai";
+import { TinyMCP } from "../mcp/mcp";
 import { TinyProvider } from "../providers";
 import { TinyTool } from "../tools";
 import { buildTools } from "../tools/util";
@@ -21,7 +22,10 @@ export class TinyAgent {
   provider: TinyProvider<any, any, any>;
 
   /** The tools available to the agent. */
-  tools: Record<string, TinyTool>;
+  toolMap: Record<string, TinyTool>;
+
+  /** MCP Clients the agent is connected to */
+  clients: Record<string, TinyMCP> = {};
 
   /** The system prompt for the agent.
    * Uses the default settings returned by {@link defaultSettings} if not provided.
@@ -37,11 +41,14 @@ export class TinyAgent {
       provider,
       tools = [],
       settings = undefined,
+      clients = [],
     } = options;
 
     this.name = name;
     this.provider = provider;
-    this.tools = toMap(tools, (tool) => tool.name);
+    this.toolMap = toMap(tools, (tool) => tool.name);
+
+    this.clients = toMap(clients, (client) => client.settings.name);
 
     // If agent settings are provided we override the default settings entirely
     if (settings) {
@@ -62,10 +69,7 @@ export class TinyAgent {
 
     // Merge the existing class tools with the parameters
     // and build the tool set.
-    const tools = buildTools({
-      ...this.tools,
-      ...toMap(paramTools),
-    });
+    const tools = await this.tools(paramTools);
 
     // merge the parameters with the class properties overriding any duplicates
     const config = {
@@ -86,6 +90,7 @@ export class TinyAgent {
 
       result = ok(data);
     } catch (error) {
+      console.error("Error generating text", error);
       result = err(error);
     }
 
@@ -95,32 +100,61 @@ export class TinyAgent {
   /** Adds or replaces a tool in the agent's tools. */
   putTool(tool: TinyTool) {
     if (!tool) {
-      this.tools = {};
+      this.toolMap = {};
     }
-    this.tools[tool.name] = tool;
+    this.toolMap[tool.name] = tool;
   }
 
   /** Removes a tool from the agent */
   deleteTool(name: string) {
-    if (name in this.tools) {
-      delete this.tools[name];
+    if (name in this.toolMap) {
+      delete this.toolMap[name];
     }
   }
 
   /** Returns a tool by name */
-  getTool(name: string) {
-    return this.tools[name] || undefined;
+  async findTool(name: string) {
+    const tools = await this.tools();
+    return tools[name];
   }
 
-  defaultSettings(): Required<AgentSettings> {
+  /** This will compile all agent tool sources into a single map.
+   * It will use all class tools, all mcp client tools, and any extra tools
+   * passed in as an argument to the function.
+   */
+  async tools(extraTools: TinyTool[] = []) {
+    let clientTools = {
+      ...this.toolMap,
+    };
+    for (const client of Object.values(this.clients)) {
+      const tools = await client.tools();
+      if (tools.success) {
+        clientTools = { ...clientTools, ...tools.data };
+      }
+    }
+
+    return buildTools({
+      ...clientTools,
+      ...toMap(extraTools),
+    });
+  }
+
+  async connectClients() {
+    for (const [name, client] of Object.entries(this.clients)) {
+      if (!client.connected) {
+        await client.connect();
+      }
+    }
+  }
+
+  async listClientTools() {}
+
+  defaultSettings(): AgentSettings {
     return {
       system: "You are a helpful assistant.",
       maxSteps: 3,
       maxTokens: 1024,
       temperature: 0.7,
-      topP: 1,
-      frequencyPenalty: 0,
-      presencePenalty: 0,
     };
   }
 }

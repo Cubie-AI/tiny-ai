@@ -42,7 +42,7 @@ export function err(error: unknown): Result {
   });
 }
 
-export function ok<T>(data: T): Result<T> {
+export function ok<T>(data?: T): Result<T> {
   return buildResult({
     success: true,
     data,

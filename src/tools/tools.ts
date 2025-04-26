@@ -1,3 +1,5 @@
+import { jsonSchema } from "ai";
+import { MCPToolSpec } from "../mcp/mcp.types";
 import { TinyToolConfig } from "./tools.types";
 import { buildTool } from "./util";
 
@@ -17,5 +19,21 @@ export class TinyTool {
 
   build() {
     return buildTool(this.config);
+  }
+
+  /**
+   * Create a new TinyTool instance directly from an MCP tool response.
+   */
+  static fromMCP({
+    name,
+    description = "",
+    inputSchema,
+    handler,
+  }: MCPToolSpec): TinyTool {
+    return new TinyTool(name, {
+      description,
+      parameters: jsonSchema(inputSchema),
+      handler,
+    });
   }
 }

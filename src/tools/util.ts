@@ -45,7 +45,6 @@ export function buildToolExecutor<
 >(method: Method, context?: Context) {
   return async (args: Arguments) => {
     let result: ExecuteResult<Method>;
-
     try {
       const data = await method(args, context);
       result = ok(data);
