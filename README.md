@@ -131,3 +131,35 @@ const result = await agent.generateText({
   tools: [populationTool],
 });
 ```
+
+### MCP Clients
+
+You may also wish to supply your agent with access to an MCP server.
+
+```typescript
+import { TinyAgent, TinyAnthropic, TinyMCP } from "@cubie-ai/tiny-ai";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import path from "path";
+
+// Create a TinyMCP instances and pass in the name, version and transport
+const solanaMcpClient = new TinyMCP({
+  name: "Solana MCP Client",
+  version: "1.0.0",
+  transport: new StdioClientTransport({
+    command: "node",
+    args: ["dist/mcp/server.js"],
+  }),
+});
+
+// Add one or more clients to your agent.
+export const agent = new TinyAgent({
+  settings: {
+    system: "You are a helpful assistant.",
+    maxSteps: 5,
+  },
+  provider: new TinyAnthropic({
+    apiKey: "your-api-key",
+  }),
+  clients: [solanaMcpClient],
+});
+```
