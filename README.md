@@ -53,23 +53,29 @@ import { TinyAgent, TinyAnthropic, TinyTool } from "@cubie-ai/tiny-ai";
 import { z } from "zod";
 
 async function main() {
+  // create the model provider
+  const provider = new TinyAnthropic({
+    apiKey: "your-api-key",
+  });
+
+  // create a simple tool
+  const weather = new TinyTool("getWeather", {
+    description: "Get the weather at a given location",
+    parameters: z.object({ location: z.string() }),
+    handler: ({ location }) => 100,
+  });
+
+  // create the agent
   const agent = new TinyAgent({
-    name: "Cubie",
-    provider: new TinyAnthropic({
-      apiKey: "your-api-key",
-    }),
-    tools: [
-      new TinyTool("getWeather", {
-        description: "Get the weather at a given location",
-        parameters: z.object({ location: z.string() }),
-        handler: ({ location }) => 100,
-      }),
-    ],
+    provider,
+    tools: [tool],
     settings: {
+      // optional agent settings
       system: "You are a helpful and charming assistant",
     },
   });
 
+  // use the agent to generateText
   const response = await agent.generateText({
     prompt: "Hello, how are you?",
     maxSteps: 3,
