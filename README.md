@@ -114,7 +114,7 @@ const populationTool = new TinyTool("getPopulation", {
   },
 });
 
-// METHOD 1: in the constructor
+// Method 1: in the constructor
 const agent = new TinyAgent({
   provider: new TinyAnthropic({
     apiKey: "your-api-key",
