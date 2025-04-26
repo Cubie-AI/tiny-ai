@@ -216,6 +216,9 @@ const loadContext = new TinyTool("loadContext", {
   handler: () => ({ context: formatContext(mockLoadContext()) }),
 });
 
+// add the tool to the agent
+agent.putTool(loadContext);
+
 // create a tool that posts tweets. Here you would use the twitter-sdk
 const tweet = new TinyTool("tweet", {
   description: "Post a tweet to Twitter. ",
