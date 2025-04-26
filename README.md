@@ -17,7 +17,7 @@ A small, unopinionated and easily extensible ai framework
   - [Conversational Agent](https://github.com/Cubie-AI/tiny-ai-examples#simple-agent-convo)
   - [ExpressJs Agent](https://github.com/Cubie-AI/tiny-ai-examples#express-agent)
   - [Tool Use Agent](https://github.com/Cubie-AI/tiny-ai-examples#agent-tool-use)
-  - [MCP Tool Use Agent](https://github.com/Cubie-AI/tiny-ai-examples#mcp-tool-use)
+  - [MCP Tool Use Agent](https://github.com/Cubie-AI/tiny-ai-examples#mcp-tool-use-agent)
 
 ## Documentation
 
