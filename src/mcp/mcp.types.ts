@@ -1,5 +1,6 @@
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 
 /**
  * Settings for a Model Context Protocol (MCP) client.
@@ -12,7 +13,10 @@ export interface MCPClientSettings {
   version: string;
 
   /** The transport type for the client */
-  transport: StdioClientTransport | SSEClientTransport;
+  transport:
+    | StdioClientTransport
+    | SSEClientTransport
+    | StreamableHTTPClientTransport;
 }
 
 export interface MCPToolSpec {

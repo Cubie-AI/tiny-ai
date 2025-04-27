@@ -1,7 +1,6 @@
 import { ImageModelV1, ProviderV1 } from "@ai-sdk/provider";
 import { LanguageModelV1 } from "ai";
 import { getModelId, TinyProviderError } from "../utils";
-import { TinyProviderOptions } from "./base.types";
 
 /**
  * Base class for all providers.
@@ -14,7 +13,7 @@ export abstract class TinyProvider<
   ModelProviderId extends string = ""
 > {
   public provider: ModelProvider | undefined;
-  constructor(public options: TinyProviderOptions<ModelProviderSettings>) {}
+  constructor(public options: ModelProviderSettings) {}
 
   /**
    * Returns a LanguageModelV1 instance for the given provider using the specified model ID or the provider's default model ID.

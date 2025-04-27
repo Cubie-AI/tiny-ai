@@ -1,6 +1,5 @@
 import { createXai, XaiProvider, XaiProviderSettings } from "@ai-sdk/xai";
 import { TinyProvider } from "./base";
-import { TinyProviderOptions } from "./base.types";
 
 /** The support language models by xAI */
 export type XaiChatModelId =
@@ -33,7 +32,7 @@ export class TinyXAI extends TinyProvider<
   XaiProviderSettings,
   XaiChatModelId | XaiImageModelId
 > {
-  constructor(options: TinyProviderOptions<XaiProviderSettings>) {
+  constructor(options: XaiProviderSettings) {
     super({
       ...options,
     });

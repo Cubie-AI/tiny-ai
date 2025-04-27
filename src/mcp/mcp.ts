@@ -42,6 +42,7 @@ export class TinyMCP {
       await this.client.connect(this.settings.transport);
       this.connected = true;
     } catch (error) {
+      console.error("Error connecting to MCP client:", error);
       this.connected = false;
     }
   }

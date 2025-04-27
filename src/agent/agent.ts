@@ -7,12 +7,13 @@ import { err, getMessages, ok, TinyAgentError } from "../utils";
 import { toMap } from "../utils/transform";
 import {
   AgentSettings,
+  GenerateStreamParams,
   GenerateTextParams,
   TinyAgentOptions,
 } from "./agent.types";
 
 /**
- * @document ../../guides/agents.md
+ * @document ../../guides/agents/creation.md
  */
 export class TinyAgent {
   /** The name of the agent. */
@@ -90,11 +91,36 @@ export class TinyAgent {
 
       result = ok(data);
     } catch (error) {
-      console.error("Error generating text", error);
       result = err(error);
     }
 
     return result;
+  }
+
+  async streamText(params: GenerateStreamParams) {
+    // Destructure the parameters that are used within the function
+    const {
+      modelId,
+      prompt,
+      messages,
+      tools: paramTools = [],
+      ...options
+    } = params;
+
+    // Merge the existing class tools with the parameters
+    // and build the tool set.
+    const tools = await this.tools(paramTools);
+
+    // merge the parameters with the class properties overriding any duplicates
+    const config = {
+      ...this.settings,
+      ...options,
+      model: this.provider.languageModel(modelId),
+      tools,
+      messages: getMessages({ prompt, messages }),
+    };
+
+    return generateText(config);
   }
 
   /** Adds or replaces a tool in the agent's tools. */

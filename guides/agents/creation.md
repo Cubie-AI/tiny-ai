@@ -1,4 +1,4 @@
-# Agents
+# Creating Agents
 
 ## Configuration
 
@@ -31,4 +31,24 @@ interface AgentSettings {
   frequencyPenalty?: number;
   presencePenalty?: number;
 }
+```
+
+## Creating an Agent
+
+You will need an `API_KEY` from one of the supported providers.
+
+1. You create a provider instances
+
+```typescript
+const provider = new TinyXAI({
+  apiKey: "API_KEY",
+});
+```
+
+2. You create a new `TinyAgent` and supply the provider
+
+```typescript
+const agent = new TinyAgent({
+  provider,
+});
 ```

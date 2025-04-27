@@ -4,10 +4,9 @@ import { err, ok } from "../utils";
 import { toMap } from "../utils/transform";
 import { TinyTool } from "./tools";
 import { ExecuteResult, TinyToolConfig } from "./tools.types";
-
 /**
  * Utility function to for converting a map or array of {@link TinyTool} into a map
- * of {@link Tool} objects.
+ * of [Tool] objects.
  */
 export function buildTools(tools: TinyTool[] | Record<string, TinyTool>) {
   return toMap(
@@ -18,7 +17,7 @@ export function buildTools(tools: TinyTool[] | Record<string, TinyTool>) {
 }
 
 /** This function is used to help dynamically build tools for an agent,
- *  by wrapping the handler function in a {@link executeToolCall} to allow for
+ *  by wrapping the handler function in a {@link buildToolExecutor} to allow for
  *  error handling, result formatting, and optional context passing.
  */
 export function buildTool(params: TinyToolConfig): Tool {

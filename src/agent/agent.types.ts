@@ -1,4 +1,4 @@
-import { generateText } from "ai";
+import { generateText, streamText } from "ai";
 import { TinyMCP } from "../mcp/mcp";
 import { TinyProvider } from "../providers";
 import { TinyTool } from "../tools";
@@ -62,6 +62,17 @@ export type VercelGenerateTextParams = Omit<
   Parameters<typeof generateText>[0],
   "model" | "tools"
 >;
+
+export type VercelStreamTextParams = Omit<
+  Parameters<typeof streamText>[0],
+  "model" | "tools"
+>;
+
+export type GenerateStreamParams = VercelStreamTextParams & {
+  tools?: TinyTool[];
+  /** The model ID to use for generation. */
+  modelId?: string;
+};
 
 /** Parameters for generating text using the agent. */
 export type GenerateTextParams = VercelGenerateTextParams & {
