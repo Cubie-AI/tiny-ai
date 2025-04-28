@@ -68,16 +68,20 @@ export type VercelStreamTextParams = Omit<
   "model" | "tools"
 >;
 
-export type GenerateStreamParams = VercelStreamTextParams & {
-  tools?: TinyTool[];
-  /** The model ID to use for generation. */
-  modelId?: string;
-};
+export type GenerateStreamParams<ModelProviderId extends string = string> =
+  VercelStreamTextParams & {
+    tools?: TinyTool[];
+    /** The model ID to use for generation. */
+    modelId?: ModelProviderId;
+  };
 
 /** Parameters for generating text using the agent. */
-export type GenerateTextParams = VercelGenerateTextParams & {
+export interface GenerateTextParams<ModelProviderId extends string = string> {
   tools?: TinyTool[];
 
   /** The model ID to use for generation. */
-  modelId?: string;
-};
+  modelId?: ModelProviderId;
+
+  /** Other parameters for text generation */
+  [key: string]: any;
+}
