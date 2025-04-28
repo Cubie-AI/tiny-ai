@@ -18,6 +18,7 @@ describe("TinyAgent", () => {
     const agent = new TinyAgent({
       provider,
     });
+
     expect(agent).toBeDefined();
     expect(agent.name).toBe("TinyAgent");
     expect(agent.provider).toBeDefined();
@@ -28,6 +29,7 @@ describe("TinyAgent", () => {
       name: "testAgent",
       provider,
     });
+
     expect(agent).toBeDefined();
     expect(agent.name).toBe("testAgent");
   });
@@ -39,6 +41,7 @@ describe("TinyAgent settings", () => {
       name: "testAgent",
       provider: new TinyAnthropic({ apiKey: "test-api-key" }),
     });
+
     expect(agent.settings).toEqual(agent.defaultSettings());
   });
 
@@ -58,6 +61,7 @@ describe("TinyAgent settings", () => {
       provider: new TinyAnthropic({ apiKey: "test-api-key" }),
       settings: {},
     });
+
     expect(agent.settings).toEqual({});
   });
 });

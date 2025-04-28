@@ -1,6 +1,6 @@
-import { generateText } from "ai";
+import { generateText, streamText } from "ai";
 import { TinyMCP } from "../mcp/mcp";
-import { TinyProvider } from "../providers";
+import { ProviderModelId, TinyProvider } from "../providers";
 import { TinyTool } from "../tools";
 import { buildTools } from "../tools/util";
 import { err, getMessages, ok, TinyAgentError } from "../utils";
@@ -15,12 +15,12 @@ import {
 /**
  * @document ../../guides/agents/creation.md
  */
-export class TinyAgent {
+export class TinyAgent<Provider extends TinyProvider<any, any, any>> {
   /** The name of the agent. */
   name: string;
 
   /** The provider */
-  provider: TinyProvider<any, any, any>;
+  provider: Provider;
 
   /** The tools available to the agent. */
   toolMap: Record<string, TinyTool>;
@@ -36,7 +36,7 @@ export class TinyAgent {
   /**
    * Creates an instance of TinyAgent.
    */
-  constructor(options: TinyAgentOptions<TinyProvider<any, any, any>>) {
+  constructor(options: TinyAgentOptions<Provider>) {
     const {
       name = "TinyAgent",
       provider,
@@ -58,7 +58,9 @@ export class TinyAgent {
   }
 
   /** Call the Provider's language model to generate a text response from the supplied prompt or messages.*/
-  async generateText(params: GenerateTextParams) {
+  async generateText(
+    params: GenerateTextParams<ProviderModelId<typeof this.provider>>
+  ) {
     // Destructure the parameters that are used within the function
     const {
       modelId,
@@ -68,6 +70,8 @@ export class TinyAgent {
       ...options
     } = params;
 
+    const model = this.provider.languageModel(modelId);
+
     // Merge the existing class tools with the parameters
     // and build the tool set.
     const tools = await this.tools(paramTools);
@@ -76,7 +80,7 @@ export class TinyAgent {
     const config = {
       ...this.settings,
       ...options,
-      model: this.provider.languageModel(modelId),
+      model,
       tools,
       messages: getMessages({ prompt, messages }),
     };
@@ -84,20 +88,19 @@ export class TinyAgent {
     let result;
     try {
       const data = await generateText(config);
-
       if (!data) {
         throw new TinyAgentError("No data returned from the language model");
       }
-
       result = ok(data);
     } catch (error) {
       result = err(error);
     }
-
     return result;
   }
 
-  async streamText(params: GenerateStreamParams) {
+  async streamText(
+    params: GenerateStreamParams<ProviderModelId<typeof this.provider>>
+  ) {
     // Destructure the parameters that are used within the function
     const {
       modelId,
@@ -107,6 +110,8 @@ export class TinyAgent {
       ...options
     } = params;
 
+    const model = this.provider.languageModel(modelId);
+
     // Merge the existing class tools with the parameters
     // and build the tool set.
     const tools = await this.tools(paramTools);
@@ -115,12 +120,22 @@ export class TinyAgent {
     const config = {
       ...this.settings,
       ...options,
-      model: this.provider.languageModel(modelId),
+      model,
       tools,
       messages: getMessages({ prompt, messages }),
     };
 
-    return generateText(config);
+    let result;
+    try {
+      const data = streamText(config);
+      if (!data) {
+        throw new TinyAgentError("No data returned from the language model");
+      }
+      result = ok(data);
+    } catch (error) {
+      result = err(error);
+    }
+    return result;
   }
 
   /** Adds or replaces a tool in the agent's tools. */
